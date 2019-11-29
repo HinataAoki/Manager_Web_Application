@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Manager</title>
+        <link rel="stylesheet" href="/static/css/base.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+        <style>
+            header h1 {
+                padding: 0.4em 0.5em;/*文字の上下 左右の余白*/
+                color: #494949;/*文字色*/
+                background: #f4f4f4;/*背景色*/
+                border-left: solid 5px #7db4e6;/*左線*/
+                border-bottom: solid 3px #d7d7d7;/*下線*/
+            }
+            #hello{
+                border:double;
+            }
+
+            .explanation{
+                padding: 8px 19px;
+                margin: 2em 0;
+                color: #2c2c2f;
+                background: #cde4ff;
+                border-top: solid 5px #5989cf;
+                border-bottom: solid 5px #5989cf;
+            }
+
+            .explanation p {
+                margin: 0; 
+                padding: 0;
+            }
+
+            table th{/*thに対して*/
+                color: #FF9800;/*文字色*/
+                background: #fff5e5;/*背景色*/
+                text-align: center;
+            }
+
+            th,td{
+                padding: 3px 5px;
+                text-align: center;
+            }
+
+            .center{
+                text-align: center;
+            }
+
+            /*ボタン*/
+            .btn-square-soft {
+            text-decoration: none;
+            color: #ffffff;
+            width: 200px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 5px;
+            text-align: center;
+            overflow: hidden;
+            font-weight: bold;
+            background: linear-gradient(#ffb85b 0%, #ff661f 100%);
+            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.66);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.28);
+            }
+
+            .btn-square-soft:active {
+            /*押したとき*/
+            -webkit-transform: translateY(2px);
+            transform: translateY(2px);/*沈むように*/
+            box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
+            background-image: linear-gradient(#ffb85b 0%, #ff661f 100%);/*グラデーションを明るく*/
+            }
+            
+            /*pulldown*/
+            .cp_ipselect {
+                overflow: hidden;
+                width: 60%;
+                margin: 2em auto;
+                text-align: center;
+            }
+            .cp_ipselect select {
+                width: 100%;
+                padding-right: 1em;
+                cursor: pointer;
+                text-indent: 0.01px;
+                text-overflow: ellipsis;
+                border: none;
+                outline: none;
+                background: transparent;
+                background-image: none;
+                box-shadow: none;
+                -webkit-appearance: none;
+                appearance: none;
+            }
+            .cp_ipselect select::-ms-expand {
+                display: none;
+            }
+            .cp_ipselect.cp_sl04 {
+                position: relative;
+                border-radius: 2px;
+                border: 2px solid #ff9239;
+            border-radius: 50px;
+                background: #ffffff;
+            }
+            .cp_ipselect.cp_sl04::before {
+                position: absolute;
+                top: 0.8em;
+                right: 0.8em;
+                width: 0;
+                height: 0;
+                padding: 0;
+                content: '';
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+                border-top: 6px solid #425eff;
+                pointer-events: none;
+            }
+            .cp_ipselect.cp_sl04 select {
+                padding: 8px 20px 8px 8px;
+                color: #ff9239;
+            }
+
+
+
+        </style>
+    </head>
+
+    <body>
+        <header><h1>生徒成績MANAGER</h1></header>
+        <div id="app">
+            <div class="hello">
+                {% if name%}
+                    <h1>{{name}}のページです<br></h1>
+                {% elif msg%}
+                    <h1>{{msg}}</h1>
+                {% else %}
+                    <h1>こんにちわ！<br></h1>
+                {% endif %}
+            </div>
+
+            <div id="count">
+                <table border="1">
+                    <tr>
+                        <th>No</th>
+                        <th><a href="/add_c/"><button class="btn-square-soft">正解</button></a></th>
+                        <th><a href="/add_f/"><button class="btn-square-soft">不正解</button></a></th>
+                        <th>合計</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" value="カウンターです"></td>
+                        <td>{{num_of_correct}}</td>
+                        <td>{{num_of_false}}</td>
+                        <td>{{num_of_sum}}</td>
+                    </tr>
+                </table>
+            </div>
+            
+
+            <div class="explanation">
+                <p>
+                    <h2>＜＜使い方＞＞</h2>
+                    <h3>生徒の情報を表示するとき</h3>
+                    <ul>
+                        <li>生徒を選択します</li>
+                        <li>生徒の成績を表示のボタンをクリック！</li>
+                    </ul>
+                    <h3>生徒の正解数と演習数を記録するとき</h3>
+                    <ul>
+                        <li>追加のボタンをクリック！</li>
+                    </ul>
+                    <h3>正解数と不正解の数をメモしたいとき</h3>
+                    <ul>
+                        カウンターがついているので
+                        <li>正解したときは正解ボタンを押す</li>
+                        <li>間違った時は不正解ボタンを押す</li>
+                        カウントしてくれます！
+                    </ul>
+                </p>
+                
+            </div>
+
+            <a href="/add_data"><button class="btn-square-soft">追加</button>生徒の正解数と演習数を記録するときはこちらをクリック！</a>
+            <br>
+            <br>
+
+
+
+            <form action="/press" method="post" class="form-inline">
+                <div class="cp_ipselect cp_sl04">
+                    <select name="name">
+                        <option value="" disabled selected>生徒を選択</option>
+                        <option value="test_user">test_user</option>
+                        <option value="user01">user01</option>
+                        <option value="user02">user02</option>
+                        <option value="user03">user03</option>
+                    </select>
+                </div>
+                    <div class="center"><a href="/press"><button class="btn-square-soft">生徒の成績を表示</button></a></div>
+            </form>
+            <br><br>
+
+            <div class="center">
+                <button class="btn-square-soft" v-on:click='click_main'>学年を切り替える</button>
+                <div v-if="secondary">
+                    <button class="btn-square-soft" v-on:click='click_sub'>単元を切り替える</button>
+                    <h1>中学生</h1>
+                    <div v-if="first">
+                        <h1>英語</h1>
+                        <table border="1" width="100%">
+                            <tr>
+                                <th>No</th>
+                                <th>単元</th>
+                                <th>正答率</th>
+                                <th>演習量</th>
+                            </tr>
+                            <tr>
+                                <td>01</td>
+                                <td>{{unit01}}</td>
+                                <td>{{cor01}}</td>
+                                <td>{{num01}}</td>
+                            </tr>
+                            <tr>
+                                <td>02</td>
+                                <td>{{unit02}}</td>
+                                <td>{{cor02}}</td>
+                                <td>{{num02}}</td>
+                            </tr>
+                            <tr>
+                                <td>03</td>
+                                <td>{{unit03}}</td>
+                                <td>{{cor03}}</td>
+                                <td>{{num03}}</td>
+                            </tr>
+                            <tr>
+                                    <td>04</td>
+                                    <td>{{unit04}}</td>
+                                    <td>{{cor04}}</td>
+                                    <td>{{num04}}</td>
+                                </tr>
+                                <tr>
+                                    <td>05</td>
+                                    <td>{{unit05}}</td>
+                                    <td>{{cor05}}</td>
+                                    <td>{{num05}}</td>
+                                </tr>
+                                <tr>
+                                    <td>06</td>
+                                    <td>{{unit06}}</td>
+                                    <td>{{cor06}}</td>
+                                    <td>{{num06}}</td>
+                                </tr>
+                                <tr>
+                                    <td>07</td>
+                                    <td>{{unit07}}</td>
+                                    <td>{{cor07}}</td>
+                                    <td>{{num07}}</td>
+                                </tr>
+                                <tr>
+                                    <td>08</td>
+                                    <td>{{unit08}}</td>
+                                    <td>{{cor08}}</td>
+                                    <td>{{num08}}</td>
+                                </tr>
+                                <tr>
+                                    <td>09</td>
+                                    <td>{{unit09}}</td>
+                                    <td>{{cor09}}</td>
+                                    <td>{{num09}}</td>
+                                </tr>
+                                <tr>
+                                    <td>10</td>
+                                    <td>{{unit10}}</td>
+                                    <td>{{cor10}}</td>
+                                    <td>{{num10}}</td>
+                                </tr>
+                                <tr>
+                                    <td>11</td>
+                                    <td>{{unit11}}</td>
+                                    <td>{{cor11}}</td>
+                                    <td>{{num11}}</td>
+                                </tr>
+                                <tr>
+                                    <td>12</td>
+                                    <td>{{unit12}}</td>
+                                    <td>{{cor12}}</td>
+                                    <td>{{num12}}</td>
+                                </tr>
+                                <tr>
+                                    <td>13</td>
+                                    <td>{{unit13}}</td>
+                                    <td>{{cor13}}</td>
+                                    <td>{{num13}}</td>
+                                </tr>
+                                <tr>
+                                    <td>14</td>
+                                    <td>{{unit14}}</td>
+                                    <td>{{cor14}}</td>
+                                    <td>{{num14}}</td>
+                                </tr>
+                                <tr>
+                                    <td>15</td>
+                                    <td>{{unit15}}</td>
+                                    <td>{{cor15}}</td>
+                                    <td>{{num15}}</td>
+                                </tr>
+                                <tr>
+                                    <td>16</td>
+                                    <td>{{unit16}}</td>
+                                    <td>{{cor16}}</td>
+                                    <td>{{num16}}</td>
+                                </tr>
+                                <tr>
+                                    <td>17</td>
+                                    <td>{{unit17}}</td>
+                                    <td>{{cor17}}</td>
+                                    <td>{{num17}}</td>
+                                </tr>
+                                <tr>
+                                    <td>18</td>
+                                    <td>{{unit18}}</td>
+                                    <td>{{cor18}}</td>
+                                    <td>{{num18}}</td>
+                                </tr>
+                                <tr>
+                                    <td>20</td>
+                                    <td>{{unit20}}</td>
+                                    <td>{{cor20}}</td>
+                                    <td>{{num20}}</td>
+                                </tr>
+                                <tr>
+                                    <td>20</td>
+                                    <td>{{unit20}}</td>
+                                    <td>{{cor20}}</td>
+                                    <td>{{num20}}</td>
+                                </tr>
+                                <tr>
+                                    <td>21</td>
+                                    <td>{{unit21}}</td>
+                                    <td>{{cor21}}</td>
+                                    <td>{{num21}}</td>
+                                </tr>
+                                <tr>
+                                    <td>22</td>
+                                    <td>{{unit22}}</td>
+                                    <td>{{cor22}}</td>
+                                    <td>{{num22}}</td>
+                                </tr>
+                                <tr>
+                                    <td>23</td>
+                                    <td>{{unit23}}</td>
+                                    <td>{{cor23}}</td>
+                                    <td>{{num23}}</td>
+                                </tr>
+                                <tr>
+                                    <td>24</td>
+                                    <td>{{unit24}}</td>
+                                    <td>{{cor24}}</td>
+                                    <td>{{num24}}</td>
+                                </tr>
+                                <tr>
+                                    <td>25</td>
+                                    <td>{{unit25}}</td>
+                                    <td>{{cor25}}</td>
+                                    <td>{{num25}}</td>
+                                </tr>
+                                <tr>
+                                    <td>26</td>
+                                    <td>{{unit26}}</td>
+                                    <td>{{cor26}}</td>
+                                    <td>{{num26}}</td>
+                                </tr>
+                                <tr>
+                                    <td>27</td>
+                                    <td>{{unit27}}</td>
+                                    <td>{{cor27}}</td>
+                                    <td>{{num27}}</td>
+                                </tr>
+                                <tr>
+                                    <td>28</td>
+                                    <td>{{unit28}}</td>
+                                    <td>{{cor28}}</td>
+                                    <td>{{num28}}</td>
+                                </tr>
+                                <tr>
+                                    <td>29</td>
+                                    <td>{{unit29}}</td>
+                                    <td>{{cor29}}</td>
+                                    <td>{{num29}}</td>
+                                </tr>
+                                <tr>
+                                    <td>30</td>
+                                    <td>{{unit30}}</td>
+                                    <td>{{cor30}}</td>
+                                    <td>{{num30}}</td>
+                                </tr>
+                        </table>
+                    </div>
+                    <div v-if="second">
+                        <h1>数学</h1>
+                        <table border="1">
+                            <tr>
+                                <th>No</th>
+                                <th>単元</th>
+                                <th>正答率</th>
+                                <th>演習量</th>
+                            </tr>
+                            <tr>
+                                <td>101</td>
+                                <td>{{unit101}}</td>
+                                <td>{{cor101}}</td>
+                                <td>{{num101}}</td>
+                            </tr>
+                            <tr>
+                                <td>102</td>
+                                <td>{{unit102}}</td>
+                                <td>{{cor102}}</td>
+                                <td>{{num102}}</td>
+                            </tr>
+                            <tr>
+                                <td>103</td>
+                                <td>{{unit103}}</td>
+                                <td>{{cor103}}</td>
+                                <td>{{num103}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div v-if="third">
+                        <h1>国語</h1>
+                        <table border="1">
+                            <tr>
+                                <th>No</th>
+                                <th>単元</th>
+                                <th>正答率</th>
+                                <th>演習量</th>
+                            </tr>
+                            <tr>
+                                <td>201</td>
+                                <td>{{unit201}}</td>
+                                <td>{{cor201}}</td>
+                                <td>{{num201}}</td>
+                            </tr>
+                            <tr>
+                                <td>202</td>
+                                <td>{{unit202}}</td>
+                                <td>{{cor202}}</td>
+                                <td>{{num202}}</td>
+                            </tr>
+                            <tr>
+                                <td>203</td>
+                                <td>{{unit203}}</td>
+                                <td>{{cor203}}</td>
+                                <td>{{num203}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+    
+                <div v-if="high">
+                    <button class="btn-square-soft" v-on:click='click_sub'>単元</button>
+                    <h1>高校生</h1>
+                    <div v-if="first">
+                        English<br>
+                        中学生英語のみ実装してます
+                    </div>
+                    <div v-if="second">
+                        Math<br>
+                        中学生英語のみ実装してます
+                    </div>
+                    <div v-if="third">
+                        Physics<br>
+                        中学生英語のみ実装してます
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script src="/static/js/base.js"></script>
+    </body>
+</html>

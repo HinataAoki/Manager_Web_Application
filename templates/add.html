@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <style>
+            header h1 {
+                padding: 0.4em 0.5em;/*文字の上下 左右の余白*/
+                color: #494949;/*文字色*/
+                background: #f4f4f4;/*背景色*/
+                border-left: solid 5px #7db4e6;/*左線*/
+                border-bottom: solid 3px #d7d7d7;/*下線*/
+            }
+            #hello{
+                border:double;
+            }
+
+            .explanation{
+                padding: 8px 19px;
+                margin: 2em 0;
+                color: #2c2c2f;
+                background: #cde4ff;
+                border-top: solid 5px #5989cf;
+                border-bottom: solid 5px #5989cf;
+            }
+
+            .explanation p {
+                margin: 0; 
+                padding: 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header><h1>生徒成績MANAGER</h1></header>
+        <a href="/protected/"><button>元のページに戻る</button></a>
+        <div class="explanation">
+            <h2>＜＜使い方＞＞</h2>
+            <ul>
+                <li>生徒を選択</li>
+                <li>教科、単元を選択</li>
+                <li>正解数と演習数を入力</li>
+                <h5><li>最後に送信をクリック！</li></h5>
+            </ul>
+        </div>
+        <form action="/post" method="post" class="form-inline">
+            <label for="name">名前</label>
+            <select name="name">
+                <option value="" disabled selected>生徒を選択</option>
+                <option value="test_user">test_user</option>
+                <option value="user01">user01</option>
+                <option value="user02">user02</option>
+                <option value="user03">user03</option>
+            </select><br>
+
+            <label for="subject">教科を選択</label>
+            <select name="subject" class="parent" required>
+                <option value="" disabled selected>教科を選択</option>
+                <option value="english">英語</option>
+                <option value="math">数学</option>
+                <option value="japanese">国語</option>
+            </select><br>
+            
+            <label for="unit">単元を選択</label>
+            <select name="unit" class="children" >
+                <option value="" disabled selected>単元を選択</option>
+                <option value="be動詞" data-val="english">be動詞</option>
+                <option value="一般動詞" data-val="english">一般動詞</option>
+                <option value="疑問文・否定文" data-val="english">疑問文・否定文</option>
+                <option value="疑問詞" data-val="english">疑問詞</option>
+                <option value="命令文" data-val="english">命令文</option>
+                <option value="三人称" data-val="english">三人称</option>
+                <option value="現在進行形" data-val="english">現在進行形</option>
+                <option value="canできる" data-val="english">canできる</option>
+                <option value="過去形" data-val="english">過去形</option>
+                <option value="名詞の複数形" data-val="english">名詞の複数形</option>
+                <option value="代名詞" data-val="english">代名詞</option>
+                <option value="be動詞の過去形" data-val="english">be動詞の過去形</option>
+                <option value="過去進行形" data-val="english">過去進行形</option>
+                <option value="未来" data-val="english">未来</option>
+                <option value="動名詞" data-val="english">動名詞</option>
+                <option value="不定詞" data-val="english">不定詞</option>
+                <option value="助動詞" data-val="english">助動詞</option>
+                <option value="比較" data-val="english">比較</option>
+                <option value="there is(are)" data-val="english">there is(are)</option>
+                <option value="接続詞" data-val="english">接続詞</option>
+                <option value="受け身(基本)" data-val="english">受け身(基本)</option>
+                <option value="受け身(発展)" data-val="english">受け身(発展)</option>
+                <option value="現在完了" data-val="english">現在完了</option>
+                <option value="不定詞(発展)" data-val="english">不定詞(発展)</option>
+                <option value="分詞" data-val="english">分詞</option>
+                <option value="間接疑問" data-val="english">間接疑問</option>
+                <option value="関係代名詞(主格)" data-val="english">関係代名詞(主格)</option>
+                <option value="関係代名詞(目的格)" data-val="english">関係代名詞(目的格)</option>
+                <option value="形容詞" data-val="english">形容詞</option>
+                <option value="副詞" data-val="english">副詞</option>
+
+                <option value="正負の数" data-val="math">正負の数</option>
+                <option value="加法と減法" data-val="math">加法と減法</option>
+                <option value="乗法と除法" data-val="math">乗法と除法</option>
+            </select><br>
+            
+            <label for="subject">正解数</label>
+            <input type="text" class="form-control" name="correct" id="correct" placeholder="correct"><br>
+            <label for="subject">問題数</label>
+            <input type="text" class="form-control" name="num" id="num" placeholder="num"><br>
+            <button type="submit" class="btn btn-default">送信する</button>
+        </form>
+        <br><br><br><br><br><br><br>
+        <br><br><br><br><br><br><br>
+    <a href="/prpr">All delete</a><br>
+    <br><br>
+
+
+    <script>
+        $(function() {
+            var $children = $('.children');
+            var original = $children.html();
+
+            $('.parent').change(function() {
+                var val1 = $(this).val();
+
+                $children.html(original).find('option').each(function() {
+                var val2 = $(this).data('val');
+                if (val1 != val2) {
+                    $(this).not('optgroup,.msg').remove();
+                }
+                });
+
+                if ($(this).val() === '') {
+                $children.attr('disabled', 'disabled');
+                } else {
+                $children.removeAttr('disabled');
+                }
+
+            });
+        });
+
+
+    </script>
+    </body>
+</html>
+
